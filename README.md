@@ -2,9 +2,8 @@
 
 How to host your site:
 
-1. Create an Amazon Lightsail instance. There are many configuration options available. Choose the "Linux/Unix" blueprint. Click "OS Only" and select the "Amazon Linux 2" option. Get the static IP address for it. For instance, 3.83.146.181 is an IP address I have a for a Lightsail instance.
-2. Let me know your IP address. I can then have your your subdomain point to that IP address. For instance, I have brandon.bearcornfield.com point to 3.83.146.181.
-3. Open a console to your Lightsail instance. Install the nginx web server by running the following command at the console:
+1. Create an Amazon Lightsail instance. There are many configuration options available. Choose the "Linux/Unix" blueprint. Click "OS Only" and select the "Amazon Linux 2" option. Get the static IP address for it. For instance, 3.83.146.181 is an IP address I have a for a Lightsail instance. Let me know your IP address. I can then have your your subdomain point to that IP address. For instance, I have brandon.bearcornfield.com point to 3.83.146.181.
+2. Open a console to your Lightsail instance. Install the nginx web server by running the following command at the console:
 ```
 sudo amazon-linux-extras install nginx1
 ```

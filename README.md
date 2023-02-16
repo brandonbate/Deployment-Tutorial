@@ -228,6 +228,6 @@ sudo systemctl reload nginx
 ```
 You should be able to view your site from a web browser.
 
-# Step 10
+### Step 10
 
 Coming Soon!

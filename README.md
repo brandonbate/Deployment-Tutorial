@@ -184,3 +184,31 @@ set -a; source .env; set +a
 ./virtualenv/bin/gunicorn my_app.wsgi:application
 ```
 
+### Step 9
+We are going to enable nginx and Gunicorn to communicate using unix sockets. This is difficult to do on AWS.
+On the Lightsail console, navigate to ```/var```. Then run the following command to create folder for our
+socket and to grant "appropriate permissions" to that folder:
+```
+sudo mkdir sockets
+sudo chmod -R 777 sockets
+```
+Then navigate to ```/etc/nginx/sites-available``` and run 
+```
+sudo nano your_name.bearcornfield.com
+```
+Replace
+```
+	proxy pass http://localhost:8000;
+```
+with
+```
+	proxy_pass http://unix:/var/sockets/your_project-your_name.bearcornfield.com.socket;
+```
+Replace ```your_project``` with your project name. Then navigate back to your project's directory and run:
+```
+sudo systemctl reload nginx
+./virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com your_project.wsgi:application
+```
+On a web browser, visit either
+```http://(your static IP)``` or ```http://(your subdomain address)```.
+You should now see your site.

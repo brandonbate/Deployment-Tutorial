@@ -2,8 +2,11 @@
 
 How to host your site:
 
-1. Create an Amazon Lightsail instance. There are many configuration options available. Choose the "Linux/Unix" blueprint. Click "OS Only" and select the "Amazon Linux 2" option. Get the static IP address for it. For instance, 3.83.146.181 is an IP address I have a for a Lightsail instance. Let me know your IP address. I can then have your your subdomain point to that IP address. For instance, I have brandon.bearcornfield.com point to 3.83.146.181.
-2. Open a console to your Lightsail instance. Install the nginx web server by running the following command at the console:
+### Step 1
+Create an Amazon Lightsail instance. There are many configuration options available. Choose the "Linux/Unix" blueprint. Click "OS Only" and select the "Amazon Linux 2" option. Get the static IP address for it. For instance, 3.83.146.181 is an IP address I have a for a Lightsail instance. Let me know your IP address. I can then have your your subdomain point to that IP address. For instance, I have brandon.bearcornfield.com point to 3.83.146.181.
+
+### Step 2
+Open a console to your Lightsail instance. Install the nginx web server by running the following command at the console:
 ```
 sudo amazon-linux-extras install nginx1
 ```
@@ -14,7 +17,8 @@ sudo systemctl start nginx
 Check that the web server is running by visiting either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.
 
-3. We need to configure the nginx server. This is a bit complicated.
+### Step 3
+We need to configure the nginx server. This is a bit complicated.
 Navigate ```/etc/nginx/```. Then running
 ```
 sudo nano nginx.conf
@@ -60,7 +64,8 @@ On a web browser, visit either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.
 You should see an error message ```502 Bad Gateway```.
 
-4. We have a ```502 Bad Gateway``` error because we are not running a Django server instance.
+### Step 4
+We have a ```502 Bad Gateway``` error because we are not running a Django server instance.
 Navigate to your home directory using ```cd ~```. Then visit github.com and find your responsitory for the online forum project. Click on the "<> Code" button to get an https link to your respository. Save this somewhere convenient for now (like notepad). Then click on your avatar button. This will produce a drop down menu. Select "Settings". On the left side panel, click "<> Developer Settings". On the left side panel, under "Personal Access Tokens" click "Tokens (classic)". Click "Generate new token". Under "Select scopes", click on the "repo" check box. Give an appropriate Note and Expiration Date. You can then click to copy this access token.
 
 Return to the console for Lightsail. Enter the following:
@@ -70,7 +75,8 @@ git clone your_repository_address
 You should replace ```your_repository_address``` with the http link you copied earlier for your
 repository.  You will be promted to enter your username. After that, provide the personal access token you generated as your password. This will copy your repository to the Lightsail instance.
 
-5. Navigate into the folder for your repository. 
+### Step 5
+Navigate into the folder for your repository. 
 Create a virtual environment by running:
 ```
 python3.7 -m venv virtualenv
@@ -97,7 +103,8 @@ On a web browser, visit either
 You should now see your site.
 Terminate Django by entering Ctl-C.
 
-6. We will replace the Django server with Gunicorn. We install Gunicorn with the following command:
+### Step 6
+We will replace the Django server with Gunicorn. We install Gunicorn with the following command:
 ```
 ./virtualenv/bin/pip install gunicorn
 ```
@@ -108,7 +115,8 @@ You can then run your application by running
 This will display your site, but it will fail to include any static file content such as CSS files.
 Terminate Gunicorn by entering Ctl-C.
 
-7. On your local machine (not Lightsail), begin working in the repository for your project. Edit ```settings.py``` so that it contains the following:
+### Step 7
+On your local machine (not Lightsail), begin working in the repository for your project. Edit ```settings.py``` so that it contains the following:
 ```
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
@@ -134,4 +142,38 @@ sudo systemctl nginx reload
 Then restart Gunicorn with
 ```
 ./virtualenv/bin/gunicorn my_app.wsgi:application
+```
+
+### Step 8
+On your local machine, open up ```settings. py``` and replace
+```
+## SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'hy=ydw9b6f57nau_#u+%hh4819!lh0my$!ep#hfci=iw#hni(c'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+```
+with
+```
+if 'DJANGO_DEBUG_FALSE' in os.environ:
+    DEBUG = False
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+    ALLOWED_HOSTS = [os.environ['SITENAME']]
+else:
+    DEBUG = True
+    SECRET_KEY = 's#x5!*1d^7zlvbuob&=jr7dbwj%+gi+cd0cdbxo83(ls052jor'
+    ALLOWED_HOSTS = []
+```
+Then on your local machine command line, we append ```.gitignore``` with the following command:
+```
+echo .env >> .gitignore
+```
+Commit these changes to your repository and push them to github. Go to your Lightsail console and pull these changes.
+In your project folder run ```nano``` and enter the following:
+```
+DJANGO_DEBUG_FALSE=y
+SITENAME=your_name.bearcornfield.com
+DJANGO_SECRET_KEY=$(python3.7 -c"import random; print(''.join(random.SystemRandom().choices('abcdefghijklmnopqrstuvwxyz0123456789'', k=50)))")
 ```

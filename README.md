@@ -50,7 +50,7 @@ with the command:
 ```
 sudo ln -s /etc/nginx/sites-available/your_name.bearcornfield.com your_name.bearcornfield.com
 ```
-We can test of the above configuration step worked by having nginx reload its
+We can test the above configuration step worked by having nginx reload its
 configuration files:
 ```
 sudo systemctl reload nginx
@@ -59,7 +59,7 @@ On a web browser, visit either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.
 You should see an error message ```502 Bad Gateway```.
 
-5. We have a ```502 Bad Gateway``` error because we are not running a Django server instance.
+4. We have a ```502 Bad Gateway``` error because we are not running a Django server instance.
 Navigate to your home directory using ```cd ~```. Then visit github.com and find your responsitory for the online forum project. Click on the "<> Code" button to get an https link to your respository. Save this somewhere convenient for now (like notepad). Then click on your avatar button. This will produce a drop down menu. Select "Settings". On the left side panel, click "<> Developer Settings". On the left side panel, under "Personal Access Tokens" click "Tokens (classic)". Click "Generate new token". Under "Select scopes", click on the "repo" check box. Give an appropriate Note and Expiration Date. You can then click to copy this access token.
 
 Return to the console for Lightsail. Enter the following:
@@ -69,7 +69,7 @@ git clone your_repository_address
 You should replace ```your_repository_address``` with the http link you copied earlier for your
 repository.  You will be promted to enter your username. After that, provide the personal access token you generated as your password. This will copy your repository to the Lightsail instance.
 
-6. Navigate into the folder for your repository. 
+5. Navigate into the folder for your repository. 
 Create a virtual environment by running:
 ```
 python3.7 -m venv virtualenv

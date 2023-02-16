@@ -31,8 +31,8 @@ include /etc/nginx/sites-enabled/*;
 ```
 Save the file. Next, we create two folders by running the following commands:
 ```
-mkdir sites-available
-mkdir sites-enabled
+sudo mkdir sites-available
+sudo mkdir sites-enabled
 ```
 Navigate to ```/etc/nginx/sites-available/```.
 Run ```sudo nano``` to create a configuration file in this folder.

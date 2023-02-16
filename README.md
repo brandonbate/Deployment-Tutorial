@@ -19,12 +19,12 @@ Check that the web server is running by visiting either
 
 ### Step 3
 We need to configure the nginx server. This is a bit complicated.
-Navigate ```/etc/nginx/```. Then running
+Navigate to ```/etc/nginx/```. Then run
 ```
 sudo nano nginx.conf
 ```
 This will open a configuration file for nginx.
-Replace ```user nginx;``` with ```user ec2-user```.
+Replace ```user nginx;``` with ```user ec2-user;```.
 Then scroll down until you find a line that begins with ```http {```. Inside this block, insert
 ```
 include /etc/nginx/sites-enabled/*;
@@ -67,7 +67,8 @@ You should see an error message ```502 Bad Gateway```.
 
 ### Step 4
 We have a ```502 Bad Gateway``` error because we are not running a Django server instance.
-Navigate to your home directory using ```cd ~```. Then visit github.com and find your responsitory for the online forum project. Click on the "<> Code" button to get an https link to your respository. Save this somewhere convenient for now (like notepad). Then click on your avatar button. This will produce a drop down menu. Select "Settings". On the left side panel, click "<> Developer Settings". On the left side panel, under "Personal Access Tokens" click "Tokens (classic)". Click "Generate new token". Under "Select scopes", click on the "repo" check box. Give an appropriate Note and Expiration Date. You can then click to copy this access token.
+Navigate to your home directory using ```cd ~```. Then visit github.com and find your responsitory for the online forum project. Click on the "<> Code" button to get an https link to your respository. Save this somewhere convenient for now (like notepad). Then click on your avatar button. This will produce a drop down menu. Select "Settings". On the left side panel, click "<> Developer Settings". On the left side panel, under "Personal Access Tokens" click "Tokens (classic)". Click "Generate new token". Under "Select scopes", click on the "repo" check box. Give an appropriate Note and Expiration Date. 
+Gerenate the token. You can then click to copy this access token.
 
 Return to the console for Lightsail. Enter the following:
 ```
@@ -113,6 +114,8 @@ You can then run your application by running
 ```
 ./virtualenv/bin/gunicorn my_project.wsgi:application
 ```
+Replace ```my_project``` with the name of your project; in our textbook example, they have ```superlists```
+as their project name.
 This will display your site, but it will fail to include any static file content such as CSS files.
 Terminate Gunicorn by entering Ctl-C.
 
@@ -122,12 +125,12 @@ On your local machine (not Lightsail), begin working in the repository for your 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 ```
-In the same file, under ```INSTALLED_APPS``` be sure to comment out 'django.contrib.admin'.
+In the same file, under ```INSTALLED_APPS``` be sure to comment out ```'django.contrib.admin'```.
 After activating the virtual environment for this project, run
 ```
 python manage.py collectstatic
 ```
-This will generate a static folder for our static files.
+This will generate a static folder for your static files.
 Update your repository and push it to Github. Then on your Lightsail server, pull these updates. You will need the personal access token from earlier to do this. In the Lightsail console, use ```sudo nano``` to edit 
 ```/etc/nginx/sites-available/your_name.bearcornfield.com```. Add the following to this configuration file:
 ```
@@ -146,7 +149,7 @@ Then restart Gunicorn with
 ```
 
 ### Step 8
-On your local machine, open up ```settings. py``` and replace
+On your local machine, open up ```settings.py``` and replace
 ```
 ## SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'hy=ydw9b6f57nau_#u+%hh4819!lh0my$!ep#hfci=iw#hni(c'
@@ -186,7 +189,7 @@ set -a; source .env; set +a
 
 ### Step 9
 We are going to enable nginx and Gunicorn to communicate using unix sockets. This is difficult to do on AWS.
-On the Lightsail console, navigate to ```/var```. Then run the following command to create folder for our
+On the Lightsail console, navigate to ```/var```. Then run the following command to create a folder for the
 socket and to grant "appropriate permissions" to that folder:
 ```
 sudo mkdir sockets
@@ -209,6 +212,22 @@ Replace ```your_project``` with your project name. Then navigate back to your pr
 sudo systemctl reload nginx
 ./virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com.socket your_project.wsgi:application
 ```
-On a web browser, visit either
-```http://(your static IP)``` or ```http://(your subdomain address)```.
-You should now see your site.
+
+I hope that if you visited your site at this point, it will be running. But it might not be.
+If that's the case, then we need to update a configuration file for nginx. Navigate to
+```/lib/systemd/system``` and run ```sudo nano nginx.service```. Under the ```[Services]``` header
+set ```PrivateTmp = false```. Save these changes and then navigate back to your project folder.
+The following command makes sure these changes take effect:
+```
+sudo systemctl daemon-reload
+```
+Then once again run the following:
+```
+sudo systemctl reload nginx
+./virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com.socket your_project.wsgi:application
+```
+You should be able to view your site from a web browser.
+
+# Step 10
+
+Coming Soon!

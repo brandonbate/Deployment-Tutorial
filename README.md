@@ -19,8 +19,9 @@ Navigate ```/etc/nginx/```. Then running
 ```
 sudo nano nginx.conf
 ```
-This will open a configuration file for nginx. Scroll down until you find
-a line that begins with ```http {```. Inside this block, insert
+This will open a configuration file for nginx.
+Replace ```user nginx;``` with ```user ec2-user```.
+Then scroll down until you find a line that begins with ```http {```. Inside this block, insert
 ```
 include /etc/nginx/sites-enabled/*;
 ```
@@ -88,11 +89,49 @@ ALLOWED_HOSTS = ['*']
 ```
 This is an insecure solution that we will improve upon shortly. Run
 ```
-./virtualenv/bin/python manage.py runserver
+./virtualenv/bin/python manage.py runserver 8000
 ```
 to launch the Django server.
 On a web browser, visit either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.
 You should now see your site.
+Terminate Django by entering Ctl-C.
 
+6. We will replace the Django server with Gunicorn. We install Gunicorn with the following command:
+```
+./virtualenv/bin/pip install gunicorn
+```
+You can then run your application by running
+```
+./virtualenv/bin/gunicorn my_app.wsgi:application
+```
+This will display your site, but it will fail to include any static file content such as CSS files.
+Terminate Gunicorn by entering Ctl-C.
 
+7. On your local machine (not Lightsail), begin working in the repository for your project. Edit ```settings.py``` so that it contains the following:
+```
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+```
+In the same file, under ```INSTALLED_APPS``` be sure to comment out 'django.contrib.admin'.
+After activating the virtual environment for this project, run
+```
+python manage.py collectstatic
+```
+This will generate a static folder for our static files.
+Update your repository and push it to Github. Then on your Lightsail server, pull these updates. You will need the personal access token from earlier to do this. In the Lightsail console, use ```sudo nano``` to edit 
+```/etc/nginx/sites-available/your_name.bearcornfield.com```. Add the following to this configuration file:
+```
+	location /static {
+		alais /home/ec2-user/your_project_folder/static;
+	}
+```
+Save the file and then return to the folder for your project.
+We have nginx reload the configuration files with the following command:
+```
+sudo systemctl nginx reload
+```
+Then restart Gunicorn with
+```
+./virtualenv/bin/gunicorn my_app.wsgi:application
+```

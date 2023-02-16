@@ -111,7 +111,7 @@ We will replace the Django server with Gunicorn. We install Gunicorn with the fo
 ```
 You can then run your application by running
 ```
-./virtualenv/bin/gunicorn my_app.wsgi:application
+./virtualenv/bin/gunicorn my_project.wsgi:application
 ```
 This will display your site, but it will fail to include any static file content such as CSS files.
 Terminate Gunicorn by entering Ctl-C.
@@ -207,7 +207,7 @@ with
 Replace ```your_project``` with your project name. Then navigate back to your project's directory and run:
 ```
 sudo systemctl reload nginx
-./virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com your_project.wsgi:application
+./virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com.socket your_project.wsgi:application
 ```
 On a web browser, visit either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.

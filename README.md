@@ -14,7 +14,7 @@ sudo systemctl start nginx
 Check that the web server is running by visiting either
 ```http://(your static IP)``` or ```http://(your subdomain address)```.
 
-4. We need to configure the nginx server. This is a bit complicated.
+3. We need to configure the nginx server. This is a bit complicated.
 Navigate ```/etc/nginx/```. Then running
 ```
 sudo nano nginx.conf

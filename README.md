@@ -44,6 +44,7 @@ server {
 	
 	location / {
 		proxy pass http://localhost:8000;
+		proxy_set_header Host $host;
 	}
 }
 ```
@@ -177,3 +178,9 @@ DJANGO_DEBUG_FALSE=y
 SITENAME=your_name.bearcornfield.com
 DJANGO_SECRET_KEY=$(python3.7 -c"import random; print(''.join(random.SystemRandom().choices('abcdefghijklmnopqrstuvwxyz0123456789'', k=50)))")
 ```
+Save this file as ```.env```. Then run the following command to run your application by referencing these environmental variables:
+```
+set -a; source .env; set +a
+./virtualenv/bin/gunicorn my_app.wsgi:application
+```
+

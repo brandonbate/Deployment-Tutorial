@@ -43,7 +43,7 @@ server {
 	server_name your_name.bearcornfield.com;
 	
 	location / {
-		proxy pass http://localhost:8000;
+		proxy_pass http://localhost:8000;
 		proxy_set_header Host $host;
 	}
 }

@@ -136,7 +136,7 @@ Update your repository and push it to Github. Then on your Lightsail server, pul
 ```/etc/nginx/sites-available/your_name.bearcornfield.com```. Add the following to this configuration file:
 ```
 	location /static {
-		alais /home/ec2-user/your_project_folder/static;
+		alias /home/ec2-user/your_project_folder/static;
 	}
 ```
 Save the file and then return to the folder for your project.

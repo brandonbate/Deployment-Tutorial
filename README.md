@@ -252,6 +252,17 @@ ExecStart=/home/ec2-user/your_project/virtualenv/bin/gunicorn --bind unix:/var/s
 
 [Install]
 WantedBy=multi-user.target
+```
+Run the following commands to load this systemd service:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable gunicorn-your_project-your_name.bearcornfield.com
+sudo systemctl start gunicorn-your_project-your_name.bearcornfield.com
+```
+Your website should now load.
 
-
+Next, try rebooting your system to confirm that nginx and Gunicorn load as expected. You
+can do this by entering:
+```
+sudo reboot
 ```

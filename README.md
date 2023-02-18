@@ -146,7 +146,7 @@ sudo systemctl reload nginx
 ```
 Then restart Gunicorn with
 ```
-./virtualenv/bin/gunicorn my_app.wsgi:application
+./virtualenv/bin/gunicorn my_project.wsgi:application
 ```
 
 ### Step 8

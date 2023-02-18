@@ -180,7 +180,7 @@ In your project folder run ```nano``` and enter the following:
 ```
 DJANGO_DEBUG_FALSE=y
 SITENAME=your_name.bearcornfield.com
-DJANGO_SECRET_KEY=$(python3.7 -c"import random; print(''.join(random.SystemRandom().choices('abcdefghijklmnopqrstuvwxyz0123456789'', k=50)))")
+DJANGO_SECRET_KEY=$(python3.7 -c"import random; print(''.join(random.SystemRandom().choices('abcdefghijklmnopqrstuvwxyz0123456789', k=50)))")
 ```
 Save this file as ```.env```. Then run the following command to run your application by referencing these environmental variables:
 ```

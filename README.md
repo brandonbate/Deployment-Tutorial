@@ -231,4 +231,27 @@ You should be able to view your site from a web browser.
 
 ### Step 10
 
-Coming Soon!
+We want Gunicorn to run whenever our server reboots. We do this by creating a systemd service.
+Run
+```
+sudo nano /etc/systemd/system/gunicorn-your_project-your_name.bearcornfield.com.service
+```
+This will create a service file that systemd will use to boot up Gunicorn. Enter the following:
+```
+[Unit]
+Description=Guincorn
+After=network.target
+
+[Service]
+Restart=on-failure
+User=ec2-user
+WorkingDirectory=/home/ec2-user/your_project
+EnvironmentFile=/home/ec2-user/your_project/.env
+ExecStart=/home/ec2-user/your_project/virtualenv/bin/gunicorn --bind unix:/var/sockets/your_project-your_name.bearcornfield.com.socket your_project.wsgi:application
+
+
+[Install]
+WantedBy=multi-user.target
+
+
+```

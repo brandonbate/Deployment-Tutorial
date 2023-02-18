@@ -142,7 +142,7 @@ Update your repository and push it to Github. Then on your Lightsail server, pul
 Save the file and then return to the folder for your project.
 We have nginx reload the configuration files with the following command:
 ```
-sudo systemctl nginx reload
+sudo systemctl reload nginx
 ```
 Then restart Gunicorn with
 ```

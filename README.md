@@ -72,6 +72,7 @@ Gerenate the token. You can then click to copy this access token.
 
 Return to the console for Lightsail. Enter the following:
 ```
+sudo yum install git
 git clone your_repository_address
 ```
 You should replace ```your_repository_address``` with the http link you copied earlier for your

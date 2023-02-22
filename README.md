@@ -256,6 +256,7 @@ WantedBy=multi-user.target
 Run the following commands to load this systemd service:
 ```
 sudo systemctl daemon-reload
+sudo systemctl enable nginx
 sudo systemctl enable gunicorn-your_project-your_name.bearcornfield.com
 sudo systemctl start gunicorn-your_project-your_name.bearcornfield.com
 ```
